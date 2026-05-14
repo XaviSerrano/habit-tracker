@@ -6,6 +6,12 @@ from app.models.user import User
 from app.core.dependencies import get_db
 from app.core.security import hash_password, verify_password
 
+from app.core.jwt import create_access_token
+
+from app.core.deps import get_current_user
+
+from fastapi.security import OAuth2PasswordRequestForm
+
 router = APIRouter()
 
 @router.post("/users", response_model=UserResponse)
@@ -29,7 +35,14 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     return new_user
 
 @router.post("/login")
-def login(email: str, password: str, db: Session = Depends(get_db)):
+def login(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db)
+):
+    # Swagger manda username/password aquí
+    email = form_data.username
+    password = form_data.password
+
     user = db.query(User).filter(User.email == email).first()
 
     if not user:
@@ -38,4 +51,15 @@ def login(email: str, password: str, db: Session = Depends(get_db)):
     if not verify_password(password, user.password):
         raise HTTPException(status_code=400, detail="Incorrect password")
 
-    return {"message": "Login successful"}
+    access_token = create_access_token(
+        data={"sub": user.email}
+    )
+
+    return {
+        "access_token": access_token,
+        "token_type": "bearer"
+    }
+
+@router.get("/me")
+def read_me(current_user: User = Depends(get_current_user)):
+    return current_user
