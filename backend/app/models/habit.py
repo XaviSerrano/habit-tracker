@@ -16,3 +16,4 @@ class Habit(Base):
 
     owner = relationship("User", back_populates="habits")
 
+    completions = relationship("HabitCompletion", backref="habit")
