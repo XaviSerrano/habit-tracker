@@ -7,7 +7,7 @@ from app.core.deps import get_current_user
 from app.models.user import User
 from app.models.habit import Habit
 
-from app.schemas.habit import HabitCreate, HabitResponse
+from app.schemas.habit import HabitCreate, HabitResponse, HabitUpdate
 
 router = APIRouter()
 
@@ -41,3 +41,29 @@ def get_habits(
     ).all()
 
     return habits
+
+@router.put("/habits/{id}", response_model=HabitUpdate)
+def update_habit(
+    habit_id: int,
+    habit_data: HabitUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    habit = db.query(Habit).filter(
+        Habit.id == habit_id,
+        Habit.owner_id == current_user.id
+    ).first()
+
+    if not habit:
+        raise HTTPException(
+            status_code=404,
+            detail="Habit not found"
+        )
+    
+    habit.title = habit_data.title
+    habit.description = habit_data.description
+
+    db.commit()
+    db.refresh(habit)
+
+    return habit
