@@ -30,3 +30,14 @@ def create_habit(
     db.refresh(new_habit)
 
     return new_habit
+
+@router.get("/habits", response_model=list[HabitResponse])
+def get_habits(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    habits = db.query(Habit).filter(
+        Habit.owner_id == current_user.id
+    ).all()
+
+    return habits
