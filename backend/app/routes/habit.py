@@ -67,3 +67,27 @@ def update_habit(
     db.refresh(habit)
 
     return habit
+
+@router.delete("/habits/{id}")
+def delete_habit(
+    habit_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    habit = db.query(Habit).filter(
+        Habit.id == habit_id,
+        Habit.owner_id == current_user.id
+    ).first()
+
+    if not habit:
+         raise HTTPException(
+            status_code=404,
+            detail="Habit not found"
+        )
+
+    db.delete(habit)
+    db.commit()
+
+    return {
+        "message": "Habit deleted successfully"
+    }       
