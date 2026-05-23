@@ -1,154 +1,199 @@
-🧠 Habit Tracker App (Python + Angular)
+Habit Tracker App 🧠
 
-Web application for tracking daily habits, with progress visualization and a foundation ready for future artificial intelligence features.
+Modern full-stack habit tracking application built with FastAPI and React.
+
+The project focuses on clean architecture, JWT authentication, habit analytics, and future AI-powered features.
 
 🚀 Description
 
-This project is a full-stack application where users can:
+Habit Tracker is a web application where users can:
 
 Create and manage personal habits
-Track their daily progress
-View basic statistics
-(Future) Receive intelligent recommendations based on their behavior
+Track daily progress
+Visualize consistency and streaks
+Access protected routes with JWT authentication
+Build long-term habits through daily tracking
 
-The main goal is to build a solid foundation by combining a modern frontend with a Python backend, following best practices and scalable architecture.
+The backend is designed as a scalable REST API, while the frontend focuses on a modern and responsive user experience.
+
+The long-term vision is to evolve the platform with intelligent recommendations and behavioral analysis powered by AI.
 
 🧱 Tech Stack
 Backend
 Python
 FastAPI
-SQLite (initial database)
-SQLAlchemy (ORM)
-JWT for authentication
+SQLAlchemy
+SQLite
+JWT Authentication
+Pydantic
+Uvicorn
 Frontend
-Angular
-RxJS
-Angular Material / custom CSS
-DevOps / Deploy
+React
+Vite
+Tailwind CSS
+Axios
+Context API
+DevOps / Deployment
 Docker (optional)
-Render / Railway (backend)
-Vercel / Netlify (frontend)
+Railway
+Render
+Vercel
 📦 Features (MVP)
 🔐 Authentication
 User registration
-JWT-based login
-Route protection
+JWT login
+Protected routes
+Current authenticated user endpoint (/me)
 ✅ Habit Management
 Create habits
-Edit / delete habits
-List habits
+Edit habits
+Delete habits
+List user habits
 📅 Daily Tracking
 Mark habits as completed
-Completion history
-📊 Dashboard
+Habit completion history
+User-based habit ownership
+📊 Dashboard (Next Steps)
 Completion percentage
-Streaks (consecutive days)
-Basic progress visualization
-🧠 Future Improvements (AI)
+Weekly/monthly statistics
+Habit streaks
+Progress visualization
+🧠 Future AI Features
 
-The project is designed to evolve towards artificial intelligence features:
+The architecture is intentionally designed to support future AI integrations:
 
 Personalized habit recommendations
-Daily completion prediction
-Behavior pattern analysis
-“Virtual coach” with generated advice
+Completion prediction
+Behavioral pattern analysis
+AI habit coach
+Smart notifications and reminders
 🗂️ Project Structure
 habit-tracker/
 │
 ├── backend/
 │   ├── app/
 │   │   ├── main.py
+│   │   ├── core/
 │   │   ├── models/
-│   │   ├── schemas/
 │   │   ├── routes/
+│   │   ├── schemas/
 │   │   ├── services/
-│   │   └── core/
+│   │   └── utils/
+│   │
 │   └── requirements.txt
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── app/
-│   │   │   ├── components/
-│   │   │   ├── pages/
-│   │   │   ├── services/
-│   │   │   └── guards/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── context/
+│   │   ├── hooks/
+│   │   └── layouts/
+│   │
 │   └── package.json
 │
 └── README.md
 ⚙️ Installation & Setup
 1. Clone the repository
-git clone https://github.com/your-username/habit-tracker.git
+git clone https://github.com/XaviSerrano/habit-tracker.git
+
 cd habit-tracker
-2. Backend (FastAPI)
+🐍 Backend Setup (FastAPI)
+2. Create virtual environment
 cd backend
+
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-
+3. Activate virtual environment
+Windows
+venv\Scripts\activate
+macOS / Linux
+source venv/bin/activate
+4. Install dependencies
 pip install -r requirements.txt
-
+5. Start backend server
 uvicorn app.main:app --reload
 
-API available at:
+Backend available at:
 
 http://localhost:8000
 
-Auto-generated docs:
+Swagger docs:
 
 http://localhost:8000/docs
-3. Frontend (Angular)
+⚛️ Frontend Setup (React + Vite)
+1. Navigate to frontend
 cd frontend
+2. Install dependencies
 npm install
-ng serve
+3. Start development server
+npm run dev
 
-App available at:
+Frontend available at:
 
-http://localhost:4200
+http://localhost:5173
 🔐 Environment Variables
 
-Example (.env):
+Create a .env file inside backend/
+
+Example:
 
 DATABASE_URL=sqlite:///./habit.db
-SECRET_KEY=your_secret_key
+
+SECRET_KEY=your_secret_key_here
+
 ALGORITHM=HS256
+
 ACCESS_TOKEN_EXPIRE_MINUTES=30
-🧪 Testing (optional)
-pytest
-📌 Roadmap
-
-CRUD for habits
-
-JWT authentication
-
-Basic dashboard
-
-Initial deployment
-
-Basic tests
-
-Simple recommendations
-
-AI integration
-
-🎯 Project Goal
+🔑 API Authentication Flow
+Register user
+Login via /login
+Receive JWT token
+Send token in Authorization header:
+Authorization: Bearer <token>
+📌 Current Roadmap
+Backend
+ JWT authentication
+ Habit CRUD
+ Habit completion tracking
+ Streak system
+ Statistics endpoints
+ Pagination & filters
+ PostgreSQL migration
+ Alembic migrations
+ Automated tests
+Frontend
+ Authentication pages
+ Dashboard UI
+ Habit cards
+ Daily completion UI
+ Charts & analytics
+ Responsive design
+ Dark mode
+🎯 Project Goals
 
 This project aims to:
 
-Strengthen backend skills in Python
-Integrate a modern frontend with REST APIs
-Build a realistic portfolio project
-Serve as a foundation for future AI applications
+Improve backend development skills with Python
+Build production-style REST APIs
+Learn modern frontend architecture
+Practice authentication systems
+Create a scalable portfolio project
+Prepare the foundation for AI-powered features
 📄 License
 
 MIT License
 
 🤝 Contributions
 
-Contributions are welcome.
+Contributions, suggestions, and feedback are welcome.
 
 Feel free to open an issue or submit a pull request.
 
 👨‍💻 Author
 
-Your name here
+Xavi Serrano
 
-GitHub: https://github.com/XaviSerrano
+GitHub:
+
+XaviSerrano GitHub
