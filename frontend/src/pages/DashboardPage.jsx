@@ -9,7 +9,14 @@ import HabitList from '../components/HabitList'
 export default function DashboardPage() {
 
   const { user, logout } = useContext(AuthContext)
-  const { habits, createHabit } = useHabits()
+  const {
+    habits,
+    createHabit,
+    updateHabit,
+    deleteHabit,
+    completeHabit
+  } = useHabits()
+
 
   return (
     <div className="p-10">
@@ -18,8 +25,12 @@ export default function DashboardPage() {
 
       <HabitForm onCreate={createHabit} />
 
-      <HabitList habits={habits} />
-
+      <HabitList
+        habits={habits}
+        onDelete={deleteHabit}
+        onComplete={completeHabit}
+        onEdit={updateHabit}
+      />
     </div>
   )
 }

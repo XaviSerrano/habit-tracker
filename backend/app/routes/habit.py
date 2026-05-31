@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_db
@@ -47,7 +47,7 @@ def get_habits(
 
     return habits
 
-@router.put("/habits/{id}", response_model=HabitUpdate)
+@router.put("/habits/{habit_id}", response_model=HabitUpdate)
 def update_habit(
     habit_id: int,
     habit_data: HabitUpdate,
@@ -73,7 +73,7 @@ def update_habit(
 
     return habit
 
-@router.delete("/habits/{id}")
+@router.delete("/habits/{habit_id}")
 def delete_habit(
     habit_id: int,
     db: Session = Depends(get_db),

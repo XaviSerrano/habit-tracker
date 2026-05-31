@@ -1,10 +1,16 @@
-export default function HabitList({ habits }) {
+import HabitCard from './HabitCard'
+
+export default function HabitList({ habits, onDelete, onComplete, onEdit }) {
   return (
-    <div>
+    <div className="space-y-3">
       {habits.map(habit => (
-        <div key={habit.id}>
-          {habit.title} - {habit.description}
-        </div>
+        <HabitCard
+          key={habit.id}
+          habit={habit}
+          onDelete={onDelete}
+          onComplete={onComplete}
+          onEdit={onEdit}
+        />
       ))}
     </div>
   )
