@@ -12,4 +12,7 @@ class User(Base):
     password = Column(String)
 
     # Creamos la relación con habits
-    habits = relationship("Habit", back_populates="owner")
+    habits = relationship(
+        "Habit",
+        back_populates="user"
+    )

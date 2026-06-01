@@ -1,7 +1,12 @@
 export default function HabitCard({ habit, onDelete, onComplete, onEdit }) {
   return (
-    <div className="border p-4 rounded flex justify-between items-center">
-
+      <div
+        className={`border p-4 rounded flex justify-between items-center transition ${
+          habit.completed_today
+            ? 'bg-green-100 opacity-80'
+            : 'bg-white'
+        }`}
+      >
       <div>
         <h3 className="font-bold">{habit.title}</h3>
         <p className="text-gray-600">{habit.description}</p>
@@ -9,12 +14,12 @@ export default function HabitCard({ habit, onDelete, onComplete, onEdit }) {
 
       <div className="flex gap-2">
 
-        <button
-          onClick={() => onComplete(habit.id)}
-          className="bg-green-500 text-white px-2 py-1 rounded"
-        >
-          ✓
-        </button>
+        <input
+          type="checkbox"
+          checked={habit.completed_today}
+          onChange={() => onComplete(habit.id)}
+          className="w-5 h-5"
+        />
 
         <button
         onClick={() => {

@@ -11,7 +11,7 @@ from app.schemas.habit import HabitCreate, HabitResponse, HabitUpdate
 
 
 from app.models.habit_completion import HabitCompletion
-from datetime import datetime
+from datetime import datetime, date
 
 
 router = APIRouter()
@@ -45,7 +45,25 @@ def get_habits(
         Habit.owner_id == current_user.id
     ).all()
 
-    return habits
+    response = []
+
+    for habit in habits:
+        completion = db.query(HabitCompletion).filter(
+            HabitCompletion.habit_id == habit.id,
+            HabitCompletion.user_id == current_user.id,
+            HabitCompletion.completed_at >= date.today()
+        ).first()
+
+
+        response.append({
+            "id": habit.id,
+            "title": habit.title,
+            "description": habit.description,
+            "owner_id": habit.owner_id,
+            "completed_today": completion is not None
+        })
+
+    return response
 
 @router.put("/habits/{habit_id}", response_model=HabitUpdate)
 def update_habit(
@@ -85,17 +103,12 @@ def delete_habit(
     ).first()
 
     if not habit:
-         raise HTTPException(
-            status_code=404,
-            detail="Habit not found"
-        )
+        raise HTTPException(status_code=404, detail="Habit not found")
 
     db.delete(habit)
     db.commit()
 
-    return {
-        "message": "Habit deleted successfully"
-    }
+    return {"message": "Habit deleted successfully"}
 
 @router.post("/habits/{habit_id}/complete")
 
@@ -122,3 +135,44 @@ def complete_habit(
     db.commit()
 
     return {"message": "Habit marked as completed"}
+
+
+# Habit completion
+
+@router.post("/habits/{habit_id}/toggle")
+def toggle_habit(
+    habit_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    habit = db.query(Habit).filter(
+        Habit.id == habit_id,
+        Habit.owner_id == current_user.id
+    ).first()
+
+    if not habit:
+        raise HTTPException(status_code=404, detail="Habit not found")
+
+    completion = db.query(HabitCompletion).filter(
+        HabitCompletion.habit_id == habit_id,
+        HabitCompletion.user_id == current_user.id,
+        HabitCompletion.completed_at >= date.today()
+    ).first()
+
+    # si existe → desmarcar
+    if completion:
+        db.delete(completion)
+        db.commit()
+        return {"completed": False}
+
+    # si no existe → marcar
+    new_completion = HabitCompletion(
+        habit_id=habit_id,
+        user_id=current_user.id,
+        completed_at=datetime.utcnow()
+    )
+
+    db.add(new_completion)
+    db.commit()
+
+    return {"completed": True}

@@ -14,7 +14,8 @@ export default function DashboardPage() {
     createHabit,
     updateHabit,
     deleteHabit,
-    completeHabit
+    completeHabit,
+    toggleHabit
   } = useHabits()
 
 
@@ -28,7 +29,7 @@ export default function DashboardPage() {
       <HabitList
         habits={habits}
         onDelete={deleteHabit}
-        onComplete={completeHabit}
+        onComplete={toggleHabit}
         onEdit={updateHabit}
       />
     </div>

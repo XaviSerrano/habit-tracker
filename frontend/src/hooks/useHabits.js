@@ -45,6 +45,11 @@ async function completeHabit(id) {
   }
 }
 
+async function toggleHabit(id) {
+    await habitService.toggleHabit(id)
+    loadHabits()
+}
+
   useEffect(() => {
     loadHabits()
   }, [])
@@ -54,6 +59,7 @@ async function completeHabit(id) {
     createHabit,
     updateHabit,
     deleteHabit,
-    completeHabit
+    completeHabit,
+    toggleHabit
   }
 }

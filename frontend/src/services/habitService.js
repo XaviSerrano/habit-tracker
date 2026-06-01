@@ -19,5 +19,9 @@ export const habitService = {
 
     completeHabit(id) {
         return api.post(`/habits/${id}/complete`)
+    },
+
+    toggleHabit(id) {
+        return api.post(`/habits/${id}/toggle`)
     }
 }

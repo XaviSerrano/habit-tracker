@@ -16,6 +16,7 @@ class HabitResponse(BaseModel):
     title: str
     description: str | None
     owner_id: int
+    completed_today: bool = False
 
     class Config:
         from_attributes = True
