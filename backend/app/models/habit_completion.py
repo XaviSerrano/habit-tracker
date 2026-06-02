@@ -14,6 +14,6 @@ class HabitCompletion(Base):
         nullable=False
     )
 
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
 
     completed_at = Column(DateTime, nullable=False)
