@@ -1,47 +1,80 @@
-export default function HabitCard({ habit, onDelete, onComplete, onEdit }) {
+export default function HabitCard({
+  habit,
+  onDelete,
+  onComplete,
+  onEdit
+}) {
   return (
-      <div
-        className={`border p-4 rounded flex justify-between items-center transition ${
+    <div
+      className={`
+        bg-white
+        rounded-xl
+        shadow-sm
+        border
+        p-5
+        flex
+        justify-between
+        items-center
+        hover:shadow-md
+        transition-all
+        duration-200
+
+        ${
           habit.completed_today
-            ? 'bg-green-100 opacity-80'
-            : 'bg-white'
-        }`}
-      >
+            ? 'border-green-400 bg-green-50'
+            : 'border-slate-200'
+        }
+      `}
+    >
       <div>
-        <h3 className="font-bold">{habit.title}</h3>
-        <p className="text-gray-600">{habit.description}</p>
+        <h3 className="font-semibold text-lg">
+          {habit.title}
+        </h3>
+
+        <p className="text-slate-500 mt-1">
+          {habit.description}
+        </p>
+
+        {habit.completed_today && (
+          <span className="inline-block mt-2 text-sm text-green-600 font-medium">
+            ✓ Completed today
+          </span>
+        )}
       </div>
 
-      <div className="flex gap-2">
-
+      <div className="flex items-center gap-4">
         <input
           type="checkbox"
           checked={habit.completed_today}
           onChange={() => onComplete(habit.id)}
-          className="w-5 h-5"
+          className="w-6 h-6 cursor-pointer"
         />
 
         <button
-        onClick={() => {
-            const newTitle = prompt("New title", habit.title)
-            const newDescription = prompt("New description", habit.description)
-
-            onEdit(habit.id, {
-            title: newTitle,
-            description: newDescription
-            })
-        }}
+          onClick={() => onEdit(habit.id)}
+          className="
+            px-3 py-2
+            rounded-lg
+            bg-blue-500
+            text-white
+            hover:bg-blue-600
+          "
         >
-        Edit
+          Edit
         </button>
 
         <button
           onClick={() => onDelete(habit.id)}
-          className="bg-red-500 text-white px-2 py-1 rounded"
+          className="
+            px-3 py-2
+            rounded-lg
+            bg-red-500
+            text-white
+            hover:bg-red-600
+          "
         >
           Delete
         </button>
-
       </div>
     </div>
   )
