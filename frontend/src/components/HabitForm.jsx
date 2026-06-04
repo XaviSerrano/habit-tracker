@@ -26,6 +26,8 @@ export default function HabitForm({ onCreate }) {
   "
 >
   <input
+    value={title}
+    onChange={(e) => setTitle(e.target.value)}
     placeholder="Habit title"
     className="
       w-full
@@ -37,6 +39,8 @@ export default function HabitForm({ onCreate }) {
   />
 
   <textarea
+    value={description}
+    onChange={(e) => setDescription(e.target.value)}
     placeholder="Description"
     className="
       w-full

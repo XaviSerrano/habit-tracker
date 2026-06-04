@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, DateTime, ForeignKey, Date
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 
@@ -16,4 +16,4 @@ class HabitCompletion(Base):
 
     user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
 
-    completed_at = Column(DateTime, nullable=False)
+    completed_at = Column(Date, nullable=False)

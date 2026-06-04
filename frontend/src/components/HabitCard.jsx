@@ -4,7 +4,9 @@ export default function HabitCard({
   onComplete,
   onEdit
 }) {
+    console.log(habit)
   return (
+    
     <div
       className={`
         bg-white

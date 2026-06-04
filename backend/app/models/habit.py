@@ -12,7 +12,7 @@ class Habit(Base):
 
     owner_id = Column(
         Integer,
-        ForeignKey("user.id")   # 🔥 ESTO ES LO QUE TE FALTA
+        ForeignKey("user.id")
     )
 
     user = relationship("User", back_populates="habits")

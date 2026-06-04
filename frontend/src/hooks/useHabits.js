@@ -2,64 +2,51 @@ import { useEffect, useState } from 'react'
 import { habitService } from '../services/habitService'
 
 export function useHabits() {
-
   const [habits, setHabits] = useState([])
+  const [history, setHistory] = useState([])
 
   async function loadHabits() {
-    const response = await habitService.getHabits()
-    setHabits(response.data)
+    const res = await habitService.getHabits()
+    setHabits(res.data)
+  }
+
+  async function loadHistory() {
+    const res = await habitService.getHistory()
+    setHistory(res.data)
   }
 
   async function createHabit(data) {
     await habitService.createHabit(data)
-    loadHabits()
+    await loadHabits()
   }
 
   async function updateHabit(id, data) {
-    console.log("UPDATE:", id, data)
     await habitService.updateHabit(id, data)
-    loadHabits()
+    await loadHabits()
   }
 
-async function deleteHabit(id) {
-  console.log("DELETE CLICK:", id)
-
-  try {
+  async function deleteHabit(id) {
     await habitService.deleteHabit(id)
-    console.log("DELETE SUCCESS:", id)
-    loadHabits()
-  } catch (err) {
-    console.error("DELETE ERROR:", err.response?.data || err.message)
+    await loadHabits()
   }
-}
 
-async function completeHabit(id) {
-  console.log("COMPLETE CLICK:", id)
-
-  try {
-    await habitService.completeHabit(id)
-    console.log("COMPLETE SUCCESS:", id)
-    loadHabits()
-  } catch (err) {
-    console.error("COMPLETE ERROR:", err.response?.data || err.message)
-  }
-}
-
-async function toggleHabit(id) {
+  async function toggleHabit(id) {
     await habitService.toggleHabit(id)
-    loadHabits()
-}
+    await loadHabits()
+    await loadHistory()
+  }
 
   useEffect(() => {
     loadHabits()
+    loadHistory()
   }, [])
 
   return {
     habits,
+    history,
     createHabit,
     updateHabit,
     deleteHabit,
-    completeHabit,
     toggleHabit
   }
 }

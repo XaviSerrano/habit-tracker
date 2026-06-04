@@ -8,6 +8,8 @@ from app.routes import user
 
 from app.models.habit import Habit
 
+from app.models.habit_completion import HabitCompletion
+
 from app.routes import habit
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -29,7 +31,6 @@ def read_root():
     return {"message": "Habit Tracker API is running"} #JSON que recibe el front
 
 app.include_router(habit.router)
+app.include_router(user.router)
 
 Base.metadata.create_all(bind=engine)
-
-app.include_router(user.router)

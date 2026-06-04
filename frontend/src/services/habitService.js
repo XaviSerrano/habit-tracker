@@ -23,5 +23,9 @@ export const habitService = {
 
     toggleHabit(id) {
         return api.post(`/habits/${id}/toggle`)
+    },
+
+    getHistory() {
+        return api.get('/habits/history')
     }
 }
