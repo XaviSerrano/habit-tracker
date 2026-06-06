@@ -36,12 +36,6 @@ export default function HabitCard({
         <p className="text-slate-500 mt-1">
           {habit.description}
         </p>
-
-        {habit.completed_today && (
-          <span className="inline-block mt-2 text-sm text-green-600 font-medium">
-            ✓ Completed today
-          </span>
-        )}
       </div>
 
       <div className="flex items-center gap-4">
@@ -78,6 +72,19 @@ export default function HabitCard({
           Delete
         </button>
       </div>
+
+      {/* ✅ Streak */}
+      {habit.streak > 0 && (
+          <span className="inline-block mt-1 text-sm text-orange-500 font-medium">
+              🔥 {habit.streak} day{habit.streak > 1 ? 's' : ''} streak
+          </span>
+      )}
+
+      {habit.completed_today && (
+          <span className="inline-block mt-2 text-sm text-green-600 font-medium">
+              ✓ Completed today
+          </span>
+      )}
     </div>
   )
 }

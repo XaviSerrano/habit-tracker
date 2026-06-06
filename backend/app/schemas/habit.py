@@ -8,7 +8,7 @@ class HabitCreate(BaseModel):
 # Editar hábitos
 class HabitUpdate(BaseModel):
     title: str
-    description: str
+    description: str | None = None
 
 # Recoger hábitos
 class HabitResponse(BaseModel):
@@ -17,6 +17,7 @@ class HabitResponse(BaseModel):
     description: str | None
     owner_id: int
     completed_today: bool = False
-
+    streak: int = 0
+    
     class Config:
         from_attributes = True

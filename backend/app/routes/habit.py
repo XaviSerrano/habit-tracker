@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from datetime import date
+from datetime import date, timedelta
 
 from app.core.dependencies import get_db
 from app.core.deps import get_current_user
@@ -29,8 +29,15 @@ def create_habit(
     db.add(new_habit)
     db.commit()
     db.refresh(new_habit)
-    return new_habit
 
+    return {
+        "id": new_habit.id,
+        "title": new_habit.title,
+        "description": new_habit.description,
+        "owner_id": new_habit.owner_id,
+        "completed_today": False,
+        "streak": 0
+    }
 
 # =========================
 # GET HABITS
@@ -45,18 +52,36 @@ def get_habits(
     response = []
 
     for habit in habits:
+        today = date.today()
+
         completion = db.query(HabitCompletion).filter(
             HabitCompletion.habit_id == habit.id,
             HabitCompletion.user_id == current_user.id,
-            HabitCompletion.completed_at == today  # ✅ Date == Date
+            HabitCompletion.completed_at == today
         ).first()
+
+        # Calculamos streak(racha)
+        all_completions = db.query(HabitCompletion).filter(
+            HabitCompletion.habit_id == habit.id,
+            HabitCompletion.user_id == current_user.id
+        ).order_by(HabitCompletion.completed_at.desc()).all()
+
+        streak = 0
+        check_date = today
+        for c in all_completions:
+            if c.completed_at == check_date:
+                streak += 1
+                check_date -= timedelta(days=1)
+            else:
+                break
 
         response.append({
             "id": habit.id,
             "title": habit.title,
             "description": habit.description,
             "owner_id": habit.owner_id,
-            "completed_today": completion is not None
+            "completed_today": completion is not None,
+            "streak": streak
         })
 
     return response
@@ -65,7 +90,7 @@ def get_habits(
 # =========================
 # UPDATE HABIT
 # =========================
-@router.put("/habits/{habit_id}", response_model=HabitUpdate)
+@router.put("/habits/{habit_id}", response_model=HabitResponse)
 def update_habit(
     habit_id: int,
     habit_data: HabitUpdate,
@@ -84,8 +109,15 @@ def update_habit(
     habit.description = habit_data.description
     db.commit()
     db.refresh(habit)
-    return habit
 
+    return {
+        "id": habit.id,
+        "title": habit.title,
+        "description": habit.description,
+        "owner_id": habit.owner_id,
+        "completed_today": False,
+        "streak": 0
+    }
 
 # =========================
 # DELETE HABIT
@@ -158,7 +190,7 @@ def toggle_habit(
     completion = db.query(HabitCompletion).filter(
         HabitCompletion.habit_id == habit_id,
         HabitCompletion.user_id == current_user.id,
-        HabitCompletion.completed_at == today  # ✅ Date == Date
+        HabitCompletion.completed_at == today
     ).first()
 
     if completion:
@@ -169,7 +201,7 @@ def toggle_habit(
     new_completion = HabitCompletion(
         habit_id=habit_id,
         user_id=current_user.id,
-        completed_at=today  # ✅ Date puro
+        completed_at=today
     )
     db.add(new_completion)
     db.commit()

@@ -1,4 +1,6 @@
 import HabitList from './HabitList'
+import { useState } from 'react'
+import EditHabitModal from './EditHabitModal'
 
 export default function HabitsPage({
   habits,
@@ -7,6 +9,7 @@ export default function HabitsPage({
   onEdit
 }) {
 
+  const [editingHabit, setEditingHabit] = useState(null)
   const completed = habits.filter(h => h.completed_today).length
 
   const progress = habits.length
@@ -43,8 +46,16 @@ export default function HabitsPage({
         habits={habits}
         onDelete={onDelete}
         onComplete={onComplete}
-        onEdit={onEdit}
+        onEdit={(id) => setEditingHabit(habits.find(h => h.id === id))}  // ✅
       />
+
+      {editingHabit && (
+        <EditHabitModal
+          habit={editingHabit}
+          onSave={onEdit}
+          onClose={() => setEditingHabit(null)}
+        />
+      )}
     </div>
   )
 }

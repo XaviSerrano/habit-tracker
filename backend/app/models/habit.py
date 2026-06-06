@@ -16,3 +16,9 @@ class Habit(Base):
     )
 
     user = relationship("User", back_populates="habits")
+
+    completions = relationship(
+        "HabitCompletion",
+        backref="habit",
+        cascade="all, delete-orphan"
+    )
