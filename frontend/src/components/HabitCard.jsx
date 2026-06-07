@@ -73,12 +73,17 @@ export default function HabitCard({
         </button>
       </div>
 
-      {/* ✅ Streak */}
-      {habit.streak > 0 && (
-          <span className="inline-block mt-1 text-sm text-orange-500 font-medium">
-              🔥 {habit.streak} day{habit.streak > 1 ? 's' : ''} streak
-          </span>
-      )}
+      <div className="mt-2 flex gap-3 text-sm">
+        {/* Current Streak */}
+        <span className="text-orange-500">
+          Streak🔥 {habit.current_streak}
+        </span>
+
+        {/* Best Streak */}
+        <span className="text-purple-500">
+          Best Streak🏆 {habit.best_streak}
+        </span>
+      </div>
 
       {habit.completed_today && (
           <span className="inline-block mt-2 text-sm text-green-600 font-medium">

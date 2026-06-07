@@ -61,7 +61,7 @@ def get_habits(
             HabitCompletion.completed_at == today
         ).first()
 
-        # Calculamos streak(racha)
+        # Recogemos los datos de fechas completadas de la BBDD
         all_completions = db.query(HabitCompletion).filter(
             HabitCompletion.habit_id == habit.id,
             HabitCompletion.user_id == current_user.id
@@ -73,10 +73,12 @@ def get_habits(
             for c in all_completions
         ]
 
+        # Calculamos la racha actual
         current_streak = calculate_current_streak(
             completion_dates
         )
 
+        # Calculamos la mejor racha
         best_streak = calculate_best_streak(
             completion_dates
         )
