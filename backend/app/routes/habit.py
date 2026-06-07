@@ -9,6 +9,14 @@ from app.models.habit import Habit
 from app.models.habit_completion import HabitCompletion
 from app.schemas.habit import HabitCreate, HabitResponse, HabitUpdate
 
+from app.services.streak_service import(
+    calculate_current_streak,
+    calculate_best_streak
+)
+
+from app.services.habit_service import build_habit_response
+
+
 router = APIRouter()
 
 
@@ -30,14 +38,7 @@ def create_habit(
     db.commit()
     db.refresh(new_habit)
 
-    return {
-        "id": new_habit.id,
-        "title": new_habit.title,
-        "description": new_habit.description,
-        "owner_id": new_habit.owner_id,
-        "completed_today": False,
-        "streak": 0
-    }
+    return build_habit_response(new_habit, db, current_user)
 
 # =========================
 # GET HABITS
@@ -66,14 +67,19 @@ def get_habits(
             HabitCompletion.user_id == current_user.id
         ).order_by(HabitCompletion.completed_at.desc()).all()
 
-        streak = 0
-        check_date = today
-        for c in all_completions:
-            if c.completed_at == check_date:
-                streak += 1
-                check_date -= timedelta(days=1)
-            else:
-                break
+        # Recuperamos el servicio de rachas
+        completion_dates = [
+            c.completed_at
+            for c in all_completions
+        ]
+
+        current_streak = calculate_current_streak(
+            completion_dates
+        )
+
+        best_streak = calculate_best_streak(
+            completion_dates
+        )
 
         response.append({
             "id": habit.id,
@@ -81,10 +87,14 @@ def get_habits(
             "description": habit.description,
             "owner_id": habit.owner_id,
             "completed_today": completion is not None,
-            "streak": streak
+            "current_streak": current_streak,
+            "best_streak": best_streak
         })
 
-    return response
+    return [
+        build_habit_response(habit, db, current_user)
+        for habit in habits
+    ]
 
 
 # =========================
@@ -110,14 +120,7 @@ def update_habit(
     db.commit()
     db.refresh(habit)
 
-    return {
-        "id": habit.id,
-        "title": habit.title,
-        "description": habit.description,
-        "owner_id": habit.owner_id,
-        "completed_today": False,
-        "streak": 0
-    }
+    return build_habit_response(habit, db, current_user)
 
 # =========================
 # DELETE HABIT
@@ -205,8 +208,7 @@ def toggle_habit(
     )
     db.add(new_completion)
     db.commit()
-    return {"completed": True}
-
+    return build_habit_response(habit, db, current_user)
 
 # =========================
 # HISTORY

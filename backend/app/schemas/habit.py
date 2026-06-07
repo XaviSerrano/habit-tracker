@@ -17,7 +17,8 @@ class HabitResponse(BaseModel):
     description: str | None
     owner_id: int
     completed_today: bool = False
-    streak: int = 0
+    current_streak: int
+    best_streak: int
     
     class Config:
         from_attributes = True
