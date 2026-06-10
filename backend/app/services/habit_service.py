@@ -5,7 +5,6 @@ from app.services.streak_service import (
     calculate_best_streak
 )
 
-
 def build_habit_response(habit, db, user):
     today = date.today()
 
@@ -28,6 +27,7 @@ def build_habit_response(habit, db, user):
         "id": habit.id,
         "title": habit.title,
         "description": habit.description,
+        "frequency": habit.frequency,
         "owner_id": habit.owner_id,
         "completed_today": completion is not None,
         "current_streak": calculate_current_streak(completion_dates),

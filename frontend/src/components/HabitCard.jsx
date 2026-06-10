@@ -4,9 +4,7 @@ export default function HabitCard({
   onComplete,
   onEdit
 }) {
-    console.log(habit)
   return (
-    
     <div
       className={`
         bg-white
@@ -16,19 +14,21 @@ export default function HabitCard({
         p-5
         flex
         justify-between
-        items-center
         hover:shadow-md
         transition-all
         duration-200
 
-        ${
-          habit.completed_today
-            ? 'border-green-400 bg-green-50'
-            : 'border-slate-200'
+        ${habit.completed_today
+          ? 'border-green-400 bg-green-50'
+          : 'border-slate-200'
         }
       `}
     >
-      <div>
+
+      {/* ===================== */}
+      {/* LEFT SIDE - INFO */}
+      {/* ===================== */}
+      <div className="flex-1">
         <h3 className="font-semibold text-lg">
           {habit.title}
         </h3>
@@ -36,23 +36,53 @@ export default function HabitCard({
         <p className="text-slate-500 mt-1">
           {habit.description}
         </p>
+
+        <p className="text-sm text-slate-500">
+          {habit.frequency}
+        </p>
+
+        {/* ===================== */}
+        {/* STREAKS */}
+        {/* ===================== */}
+        <div className="mt-3 flex gap-4 text-sm">
+          <span className="text-orange-500 font-medium">
+            🔥 {habit.current_streak} streak
+          </span>
+
+          <span className="text-purple-500 font-medium">
+            🏆 {habit.best_streak} best
+          </span>
+        </div>
+
+        {/* ===================== */}
+        {/* STATUS */}
+        {/* ===================== */}
+        {habit.completed_today && (
+          <p className="text-green-600 text-sm mt-2 font-medium">
+            ✓ Completed today
+          </p>
+        )}
       </div>
 
-      <div className="flex items-center gap-4">
+      {/* ===================== */}
+      {/* RIGHT SIDE - ACTIONS */}
+      {/* ===================== */}
+      <div className="flex flex-col items-end gap-3 ml-4">
+
         <input
           type="checkbox"
           checked={habit.completed_today}
           onChange={() => onComplete(habit.id)}
-          className="w-6 h-6 cursor-pointer"
+          className="w-5 h-5 cursor-pointer"
         />
 
         <button
           onClick={() => onEdit(habit.id)}
           className="
-            px-3 py-2
-            rounded-lg
+            px-3 py-1
             bg-blue-500
             text-white
+            rounded-lg
             hover:bg-blue-600
           "
         >
@@ -62,10 +92,10 @@ export default function HabitCard({
         <button
           onClick={() => onDelete(habit.id)}
           className="
-            px-3 py-2
-            rounded-lg
+            px-3 py-1
             bg-red-500
             text-white
+            rounded-lg
             hover:bg-red-600
           "
         >
@@ -73,23 +103,6 @@ export default function HabitCard({
         </button>
       </div>
 
-      <div className="mt-2 flex gap-3 text-sm">
-        {/* Current Streak */}
-        <span className="text-orange-500">
-          Streak🔥 {habit.current_streak}
-        </span>
-
-        {/* Best Streak */}
-        <span className="text-purple-500">
-          Best Streak🏆 {habit.best_streak}
-        </span>
-      </div>
-
-      {habit.completed_today && (
-          <span className="inline-block mt-2 text-sm text-green-600 font-medium">
-              ✓ Completed today
-          </span>
-      )}
     </div>
   )
 }

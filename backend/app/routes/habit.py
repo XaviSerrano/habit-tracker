@@ -32,6 +32,7 @@ def create_habit(
     new_habit = Habit(
         title=habit.title,
         description=habit.description,
+        frequency=habit.frequency,
         owner_id=current_user.id
     )
     db.add(new_habit)
@@ -48,50 +49,9 @@ def get_habits(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    today = date.today()
-    habits = db.query(Habit).filter(Habit.owner_id == current_user.id).all()
-    response = []
-
-    for habit in habits:
-        today = date.today()
-
-        completion = db.query(HabitCompletion).filter(
-            HabitCompletion.habit_id == habit.id,
-            HabitCompletion.user_id == current_user.id,
-            HabitCompletion.completed_at == today
-        ).first()
-
-        # Recogemos los datos de fechas completadas de la BBDD
-        all_completions = db.query(HabitCompletion).filter(
-            HabitCompletion.habit_id == habit.id,
-            HabitCompletion.user_id == current_user.id
-        ).order_by(HabitCompletion.completed_at.desc()).all()
-
-        # Recuperamos el servicio de rachas
-        completion_dates = [
-            c.completed_at
-            for c in all_completions
-        ]
-
-        # Calculamos la racha actual
-        current_streak = calculate_current_streak(
-            completion_dates
-        )
-
-        # Calculamos la mejor racha
-        best_streak = calculate_best_streak(
-            completion_dates
-        )
-
-        response.append({
-            "id": habit.id,
-            "title": habit.title,
-            "description": habit.description,
-            "owner_id": habit.owner_id,
-            "completed_today": completion is not None,
-            "current_streak": current_streak,
-            "best_streak": best_streak
-        })
+    habits = db.query(Habit).filter(
+        Habit.owner_id == current_user.id
+    ).all()
 
     return [
         build_habit_response(habit, db, current_user)
@@ -119,6 +79,7 @@ def update_habit(
 
     habit.title = habit_data.title
     habit.description = habit_data.description
+    habit.frequency = habit_data.frequency
     db.commit()
     db.refresh(habit)
 

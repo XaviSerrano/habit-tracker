@@ -4,11 +4,13 @@ export default function HabitForm({ onCreate }) {
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+  const [frequency, setFrequency] = useState("daily"
 
+  )
   function handleSubmit(e) {
     e.preventDefault()
 
-    onCreate({ title, description })
+    onCreate({ title, description, frequency })
 
     setTitle('')
     setDescription('')
@@ -50,6 +52,14 @@ export default function HabitForm({ onCreate }) {
       mb-3
     "
   />
+  <select
+    value={frequency}
+    onChange={(e) => setFrequency(e.target.value)}
+    className="w-full border p-3 rounded-lg"
+  >
+    <option value="daily">Daily</option>
+    <option value="weekly">Weekly</option>
+  </select>
 
   <button
     className="
